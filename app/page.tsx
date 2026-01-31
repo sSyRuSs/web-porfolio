@@ -34,7 +34,9 @@ import {
 
 export default function Home() {
   const router = useRouter();
-  const basePath = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
+  const basePath =
+    process.env.NEXT_PUBLIC_BASE_PATH ??
+    (process.env.NODE_ENV === "production" ? "/web-porfolio" : "");
 
   const [isDark, setIsDark] = useState(false);
   const [filterTag, setFilterTag] = useState<string | null>(null);
