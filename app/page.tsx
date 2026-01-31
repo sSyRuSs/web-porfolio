@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useMemo } from "react";
+import { useState, useRef } from "react";
 import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
@@ -34,12 +34,7 @@ import {
 
 export default function Home() {
   const router = useRouter();
-  const basePath = useMemo(() => {
-    if (typeof window === "undefined") return "";
-    return window.location.pathname.includes("/web-porfolio")
-      ? "/web-porfolio"
-      : "";
-  }, []);
+  const basePath = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
 
   const [isDark, setIsDark] = useState(false);
   const [filterTag, setFilterTag] = useState<string | null>(null);
@@ -276,6 +271,11 @@ export default function Home() {
                 </Button>
                 <Button asChild variant="outline" onClick={scrollToContact}>
                   <span>Get in Touch</span>
+                </Button>
+                <Button asChild variant="outline">
+                  <a href={`${basePath}/Long-Nguyen-Thanh-CV.pdf`} download>
+                    Download CV
+                  </a>
                 </Button>
               </div>
             </motion.div>
