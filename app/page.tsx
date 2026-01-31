@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
@@ -79,6 +79,65 @@ export default function Home() {
     viewport: { once: true, amount: 0.2 },
     variants: sectionVariants,
   } as const;
+
+  // Animation variants
+  const scaleVariants = {
+    hidden: { opacity: 0, scale: 0.8 },
+    show: {
+      opacity: 1,
+      scale: 1,
+      transition: { type: "spring", stiffness: 100 },
+    },
+  } as const;
+
+  const rotateVariants = {
+    hidden: { opacity: 0, rotate: -10 },
+    show: {
+      opacity: 1,
+      rotate: 0,
+      transition: { type: "spring", duration: 0.8 },
+    },
+  } as const;
+
+  const glowVariants = {
+    hidden: { boxShadow: "0 0 0px rgba(0,0,0,0)" },
+    show: {
+      boxShadow: [
+        "0 0 0px rgba(0,0,0,0)",
+        "0 0 20px rgba(59, 130, 246, 0.5)",
+        "0 0 0px rgba(0,0,0,0)",
+      ],
+      transition: { duration: 2, repeat: Infinity },
+    },
+  };
+
+  // Counter component
+  const Counter = ({ value }: { value: string }) => {
+    const [displayValue, setDisplayValue] = useState(0);
+    const numericValue = parseInt(value.replace(/[^0-9]/g, "")) || 0;
+
+    useEffect(() => {
+      let current = 0;
+      const increment = Math.ceil(numericValue / 50);
+      const interval = setInterval(() => {
+        current += increment;
+        if (current >= numericValue) {
+          setDisplayValue(numericValue);
+          clearInterval(interval);
+        } else {
+          setDisplayValue(current);
+        }
+      }, 20);
+      return () => clearInterval(interval);
+    }, [numericValue]);
+
+    return (
+      <>
+        {displayValue}
+        {value.replace(/[0-9]/g, "")}
+      </>
+    );
+  };
 
   // GitHub username - thay bằng username thật của bạn
   const githubUsername = "sSyRuSs";
@@ -241,8 +300,20 @@ export default function Home() {
             className="grid md:grid-cols-[auto_1fr] gap-12 items-center"
           >
             {/* Profile Image */}
-            <motion.div variants={itemVariants} className="relative group">
-              <div className="w-48 h-48 md:w-64 md:h-64 rounded-2xl overflow-hidden border-2 border-gray-200 dark:border-gray-800 transition-all group-hover:border-gray-400 dark:group-hover:border-gray-600">
+            <motion.div
+              variants={rotateVariants}
+              whileInView="show"
+              initial="hidden"
+              viewport={{ once: true }}
+              className="relative group"
+            >
+              <motion.div
+                variants={glowVariants}
+                whileInView="show"
+                initial="hidden"
+                viewport={{ once: true }}
+                className="w-48 h-48 md:w-64 md:h-64 rounded-2xl overflow-hidden border-2 border-gray-200 dark:border-gray-800 transition-all group-hover:border-gray-400 dark:group-hover:border-gray-600"
+              >
                 <Image
                   src={`${basePath}/images/IMG_9092.JPG`}
                   alt="Profile"
@@ -251,7 +322,7 @@ export default function Home() {
                   className="w-full h-full object-cover"
                   priority
                 />
-              </div>
+              </motion.div>
               {/* Decorative ring */}
               <div className="absolute -inset-4 rounded-2xl border border-gray-200 dark:border-gray-800 -z-10 group-hover:border-gray-300 dark:group-hover:border-gray-700 transition-all"></div>
             </motion.div>
@@ -259,7 +330,7 @@ export default function Home() {
             {/* Text Content */}
             <motion.div variants={itemVariants} className="space-y-6">
               <div>
-                <h1 className="text-5xl sm:text-6xl font-light tracking-tight mb-4">
+                <h1 className="text-5xl sm:text-6xl font-light tracking-tight mb-4 bg-gradient-to-r from-blue-600 via-purple-600 to-cyan-600 bg-clip-text text-transparent dark:from-blue-400 dark:via-purple-400 dark:to-cyan-400">
                   Hi, I'm a developer
                 </h1>
                 <p className="text-lg text-gray-600 dark:text-gray-400 max-w-2xl leading-relaxed">
@@ -268,13 +339,25 @@ export default function Home() {
                 </p>
               </div>
               <div className="flex flex-col sm:flex-row gap-3 pt-4">
-                <Button asChild>
+                <Button
+                  asChild
+                  className="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800"
+                >
                   <Link href="#projects">View Work</Link>
                 </Button>
-                <Button asChild variant="outline" onClick={scrollToContact}>
+                <Button
+                  asChild
+                  variant="outline"
+                  onClick={scrollToContact}
+                  className="border-purple-500 dark:border-purple-500 hover:bg-purple-50 dark:hover:bg-purple-950"
+                >
                   <span>Get in Touch</span>
                 </Button>
-                <Button asChild variant="outline">
+                <Button
+                  asChild
+                  variant="outline"
+                  className="border-cyan-500 dark:border-cyan-500 hover:bg-cyan-50 dark:hover:bg-cyan-950"
+                >
                   <a href={`${basePath}/Long-Nguyen-Thanh-CV.pdf`} download>
                     Download CV
                   </a>
@@ -294,7 +377,7 @@ export default function Home() {
             className="grid md:grid-cols-2 gap-12 items-center"
           >
             {/* Image Side */}
-            <motion.div variants={itemVariants} className="order-2 md:order-1">
+            <motion.div variants={scaleVariants} className="order-2 md:order-1">
               <div className="relative">
                 <div className="aspect-[4/5] rounded-2xl overflow-hidden border border-gray-200 dark:border-gray-800">
                   <Image
@@ -316,7 +399,7 @@ export default function Home() {
               className="order-1 md:order-2 space-y-6"
             >
               <div>
-                <h2 className="text-3xl font-light tracking-tight mb-4">
+                <h2 className="text-3xl font-light tracking-tight mb-4 bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent dark:from-purple-400 dark:to-pink-400">
                   About Me
                 </h2>
                 <div className="space-y-4 text-gray-600 dark:text-gray-400">
@@ -380,11 +463,11 @@ export default function Home() {
             {stats.map((stat) => (
               <motion.div
                 key={stat.label}
-                variants={itemVariants}
+                variants={scaleVariants}
                 className="text-center"
               >
                 <div className="text-3xl sm:text-4xl font-light tracking-tight mb-2">
-                  {stat.value}
+                  <Counter value={stat.value} />
                 </div>
                 <p className="text-sm text-gray-600 dark:text-gray-400">
                   {stat.label}
@@ -400,7 +483,9 @@ export default function Home() {
           id="projects"
           className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-24 border-t border-gray-200 dark:border-gray-800"
         >
-          <h2 className="text-3xl font-light tracking-tight mb-8">Projects</h2>
+          <h2 className="text-3xl font-light tracking-tight mb-8 bg-gradient-to-r from-blue-600 to-cyan-600 bg-clip-text text-transparent dark:from-blue-400 dark:to-cyan-400">
+            Projects
+          </h2>
 
           {/* Filter Tags */}
           <div className="mb-12 flex flex-wrap gap-2">
@@ -442,7 +527,7 @@ export default function Home() {
                 variants={slideVariants}
                 custom={idx % 2 === 0 ? "left" : "right"}
               >
-                <Card className="border-gray-200 dark:border-gray-800 bg-white dark:bg-black hover:border-gray-400 dark:hover:border-gray-600 transition-colors">
+                <Card className="border-gray-200 dark:border-gray-800 bg-white dark:bg-black hover:border-blue-400 dark:hover:border-blue-500 hover:shadow-lg hover:shadow-blue-500/10 dark:hover:shadow-blue-500/20 transition-all">
                   <CardHeader className="pb-3">
                     <CardTitle className="text-base font-medium">
                       {project.title}
@@ -512,7 +597,7 @@ export default function Home() {
           {...sectionMotion}
           className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-24 border-t border-gray-200 dark:border-gray-800"
         >
-          <h2 className="text-3xl font-light tracking-tight mb-12">
+          <h2 className="text-3xl font-light tracking-tight mb-12 bg-gradient-to-r from-orange-600 to-red-600 bg-clip-text text-transparent dark:from-orange-400 dark:to-red-400">
             GitHub Activity
           </h2>
 
@@ -764,7 +849,7 @@ export default function Home() {
           {...sectionMotion}
           className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-24 border-t border-gray-200 dark:border-gray-800"
         >
-          <h2 className="text-3xl font-light tracking-tight mb-12">
+          <h2 className="text-3xl font-light tracking-tight mb-12 bg-gradient-to-r from-green-600 to-emerald-600 bg-clip-text text-transparent dark:from-green-400 dark:to-emerald-400">
             Experience
           </h2>
           <motion.div variants={staggerVariants} className="space-y-8">
@@ -796,7 +881,9 @@ export default function Home() {
           {...sectionMotion}
           className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-24 border-t border-gray-200 dark:border-gray-800"
         >
-          <h2 className="text-3xl font-light tracking-tight mb-12">Skills</h2>
+          <h2 className="text-3xl font-light tracking-tight mb-12 bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent dark:from-indigo-400 dark:to-purple-400">
+            Skills
+          </h2>
 
           {/* Tech Stack Badges */}
           <motion.div variants={itemVariants} className="mb-12">
@@ -884,7 +971,7 @@ export default function Home() {
           {...sectionMotion}
           className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-24 border-t border-gray-200 dark:border-gray-800"
         >
-          <h2 className="text-3xl font-light tracking-tight mb-12">
+          <h2 className="text-3xl font-light tracking-tight mb-12 bg-gradient-to-r from-pink-600 to-rose-600 bg-clip-text text-transparent dark:from-pink-400 dark:to-rose-400">
             Testimonials
           </h2>
           <motion.div
@@ -922,7 +1009,7 @@ export default function Home() {
           {...sectionMotion}
           className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-24 border-t border-gray-200 dark:border-gray-800"
         >
-          <h2 className="text-3xl font-light tracking-tight mb-12">
+          <h2 className="text-3xl font-light tracking-tight mb-12 bg-gradient-to-r from-teal-600 to-cyan-600 bg-clip-text text-transparent dark:from-teal-400 dark:to-cyan-400">
             Latest Articles
           </h2>
           <motion.div
@@ -971,7 +1058,7 @@ export default function Home() {
           id="contact"
           className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-24 border-t border-gray-200 dark:border-gray-800"
         >
-          <h2 className="text-3xl font-light tracking-tight mb-8">
+          <h2 className="text-3xl font-light tracking-tight mb-8 bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent dark:from-blue-400 dark:via-purple-400 dark:to-pink-400">
             Get in Touch
           </h2>
           <motion.div
