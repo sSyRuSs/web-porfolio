@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useMemo } from "react";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
@@ -31,6 +32,14 @@ import {
 } from "lucide-react";
 
 export default function Home() {
+  const router = useRouter();
+  const basePath = useMemo(() => {
+    if (typeof window === "undefined") return "";
+    return window.location.pathname.includes("/web-porfolio")
+      ? "/web-porfolio"
+      : "";
+  }, []);
+
   const [isDark, setIsDark] = useState(false);
   const [filterTag, setFilterTag] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
@@ -198,7 +207,7 @@ export default function Home() {
             <div className="relative group">
               <div className="w-48 h-48 md:w-64 md:h-64 rounded-2xl overflow-hidden border-2 border-gray-200 dark:border-gray-800 transition-all group-hover:border-gray-400 dark:group-hover:border-gray-600">
                 <Image
-                  src="/images/IMG_9092.JPG"
+                  src={`${basePath}/images/IMG_9092.JPG`}
                   alt="Profile"
                   width={256}
                   height={256}
@@ -241,7 +250,7 @@ export default function Home() {
               <div className="relative">
                 <div className="aspect-[4/5] rounded-2xl overflow-hidden border border-gray-200 dark:border-gray-800">
                   <Image
-                    src="/images/IMG_9092.JPG"
+                    src={`${basePath}/images/IMG_9092.JPG`}
                     alt="About me"
                     width={400}
                     height={500}
