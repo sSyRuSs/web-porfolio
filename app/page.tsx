@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useRef, useMemo } from "react";
+import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
@@ -50,36 +51,69 @@ export default function Home() {
   });
   const contactRef = useRef<HTMLDivElement>(null);
 
+  const sectionVariants = {
+    hidden: { opacity: 0, y: 24 },
+    show: { opacity: 1, y: 0 },
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: 16 },
+    show: { opacity: 1, y: 0 },
+  };
+
+  const slideVariants = {
+    hidden: (direction: "left" | "right") => ({
+      opacity: 0,
+      x: direction === "left" ? -32 : 32,
+    }),
+    show: { opacity: 1, x: 0 },
+  };
+
+  const staggerVariants = {
+    hidden: {},
+    show: {
+      transition: { staggerChildren: 0.08 },
+    },
+  };
+
+  const sectionMotion = {
+    initial: "hidden",
+    whileInView: "show",
+    viewport: { once: true, amount: 0.2 },
+    variants: sectionVariants,
+  } as const;
+
   // GitHub username - thay bằng username thật của bạn
-  const githubUsername = "yourusername";
+  const githubUsername = "sSyRuSs";
 
   const projects = [
     {
       id: 1,
-      title: "Project One",
-      description: "A modern web application built with Next.js and TypeScript",
-      tags: ["Next.js", "React", "TypeScript"],
-      github: `https://github.com/${githubUsername}/project-one`,
+      title: "ERP-CMMS System",
+      description:
+        "A modern web application built with Next.js and Spring Boot",
+      tags: ["Next.js", "Spring Boot", "Flutter"],
+      github: `https://github.com/${githubUsername}/erp-cmms-system`,
       link: "#",
       stars: 45,
       forks: 12,
     },
     {
       id: 2,
-      title: "Project Two",
-      description: "Full-stack application with real-time features",
-      tags: ["Node.js", "React", "WebSocket"],
-      github: `https://github.com/${githubUsername}/project-two`,
+      title: "STPMS",
+      description: "HUIT Student Training Point Management System",
+      tags: [".NET", "Flutter", "Azure"],
+      github: `https://github.com/${githubUsername}/stpms`,
       link: "#",
       stars: 32,
       forks: 8,
     },
     {
       id: 3,
-      title: "Project Three",
-      description: "Mobile-first responsive design implementation",
-      tags: ["HTML", "CSS", "JavaScript"],
-      github: `https://github.com/${githubUsername}/project-three`,
+      title: "Agricultural Auction Web System",
+      description: "A web-based auction system for agricultural products",
+      tags: ["Spring Boot", "Jenkins", "NextJS"],
+      github: `https://github.com/${githubUsername}/agricultural-auction-web-system`,
       link: "#",
       stars: 28,
       forks: 5,
@@ -136,11 +170,11 @@ export default function Home() {
     },
     {
       category: "Backend",
-      items: ["Node.js", "PostgreSQL", "REST API"],
+      items: ["Node.js", "Spring Boot", ".NET", "PostgreSQL", "REST API"],
     },
     {
       category: "Tools",
-      items: ["Git", "Docker", "VS Code"],
+      items: ["Git", "Docker", "Jenkins CI/CD", "VS Code"],
     },
     {
       category: "Other",
@@ -177,7 +211,7 @@ export default function Home() {
         <nav className="sticky top-0 z-50 border-b border-gray-200 dark:border-gray-800 bg-white/95 dark:bg-black/95">
           <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
             <div className="text-lg font-semibold tracking-tight">
-              Portfolio
+              Nguyễn Thành Long
             </div>
             <div className="flex items-center gap-2">
               <button
@@ -201,10 +235,16 @@ export default function Home() {
         </nav>
 
         {/* Hero Section */}
-        <section className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-24 sm:py-32">
-          <div className="grid md:grid-cols-[auto_1fr] gap-12 items-center">
+        <motion.section
+          {...sectionMotion}
+          className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-24 sm:py-32"
+        >
+          <motion.div
+            variants={staggerVariants}
+            className="grid md:grid-cols-[auto_1fr] gap-12 items-center"
+          >
             {/* Profile Image */}
-            <div className="relative group">
+            <motion.div variants={itemVariants} className="relative group">
               <div className="w-48 h-48 md:w-64 md:h-64 rounded-2xl overflow-hidden border-2 border-gray-200 dark:border-gray-800 transition-all group-hover:border-gray-400 dark:group-hover:border-gray-600">
                 <Image
                   src={`${basePath}/images/IMG_9092.JPG`}
@@ -217,10 +257,10 @@ export default function Home() {
               </div>
               {/* Decorative ring */}
               <div className="absolute -inset-4 rounded-2xl border border-gray-200 dark:border-gray-800 -z-10 group-hover:border-gray-300 dark:group-hover:border-gray-700 transition-all"></div>
-            </div>
+            </motion.div>
 
             {/* Text Content */}
-            <div className="space-y-6">
+            <motion.div variants={itemVariants} className="space-y-6">
               <div>
                 <h1 className="text-5xl sm:text-6xl font-light tracking-tight mb-4">
                   Hi, I'm a developer
@@ -238,15 +278,21 @@ export default function Home() {
                   <span>Get in Touch</span>
                 </Button>
               </div>
-            </div>
-          </div>
-        </section>
+            </motion.div>
+          </motion.div>
+        </motion.section>
 
         {/* About Section */}
-        <section className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-24 border-t border-gray-200 dark:border-gray-800">
-          <div className="grid md:grid-cols-2 gap-12 items-center">
+        <motion.section
+          {...sectionMotion}
+          className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-24 border-t border-gray-200 dark:border-gray-800"
+        >
+          <motion.div
+            variants={staggerVariants}
+            className="grid md:grid-cols-2 gap-12 items-center"
+          >
             {/* Image Side */}
-            <div className="order-2 md:order-1">
+            <motion.div variants={itemVariants} className="order-2 md:order-1">
               <div className="relative">
                 <div className="aspect-[4/5] rounded-2xl overflow-hidden border border-gray-200 dark:border-gray-800">
                   <Image
@@ -260,30 +306,35 @@ export default function Home() {
                 {/* Decorative element */}
                 <div className="absolute -bottom-6 -right-6 w-32 h-32 border border-gray-200 dark:border-gray-800 rounded-2xl -z-10"></div>
               </div>
-            </div>
+            </motion.div>
 
             {/* Content Side */}
-            <div className="order-1 md:order-2 space-y-6">
+            <motion.div
+              variants={itemVariants}
+              className="order-1 md:order-2 space-y-6"
+            >
               <div>
                 <h2 className="text-3xl font-light tracking-tight mb-4">
                   About Me
                 </h2>
                 <div className="space-y-4 text-gray-600 dark:text-gray-400">
                   <p>
-                    I'm a passionate developer with a focus on creating clean,
-                    efficient, and user-friendly web applications. With years of
-                    experience in modern web technologies, I bring ideas to life
-                    through code.
+                    I'm a passionate Back-End Developer with hands-on experience
+                    building scalable, high-performance systems, especially in
+                    ERP-related domains. My main focus is on Java Spring Boot
+                    and .NET, and I love automating workflows with Jenkins and
+                    optimizing caching with Redis.
                   </p>
                   <p>
-                    My approach combines technical expertise with a keen eye for
-                    design, ensuring that every project not only works
-                    flawlessly but also provides an exceptional user experience.
+                    I enjoy turning complex requirements into reliable services
+                    with clean architecture, solid testing, and performance in
+                    mind. I'm always eager to learn the latest in backend tech
+                    and DevOps.
                   </p>
                   <p>
-                    When I'm not coding, you can find me exploring new
-                    technologies, contributing to open source, or sharing
-                    knowledge with the developer community.
+                    When I'm not coding, you'll find me collaborating on open
+                    source or connecting with like-minded developers in the
+                    community.
                   </p>
                 </div>
               </div>
@@ -299,7 +350,7 @@ export default function Home() {
                 <div className="flex items-center gap-3 text-sm">
                   <span className="font-medium min-w-[100px]">Experience:</span>
                   <span className="text-gray-600 dark:text-gray-400">
-                    3+ Years
+                    2+ Years
                   </span>
                 </div>
                 <div className="flex items-center gap-3 text-sm">
@@ -311,28 +362,39 @@ export default function Home() {
                   </span>
                 </div>
               </div>
-            </div>
-          </div>
-        </section>
+            </motion.div>
+          </motion.div>
+        </motion.section>
 
         {/* Stats Section */}
-        <section className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-24 border-t border-gray-200 dark:border-gray-800">
-          <div className="grid grid-cols-3 gap-8">
+        <motion.section
+          {...sectionMotion}
+          className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-24 border-t border-gray-200 dark:border-gray-800"
+        >
+          <motion.div
+            variants={staggerVariants}
+            className="grid grid-cols-3 gap-8"
+          >
             {stats.map((stat) => (
-              <div key={stat.label} className="text-center">
+              <motion.div
+                key={stat.label}
+                variants={itemVariants}
+                className="text-center"
+              >
                 <div className="text-3xl sm:text-4xl font-light tracking-tight mb-2">
                   {stat.value}
                 </div>
                 <p className="text-sm text-gray-600 dark:text-gray-400">
                   {stat.label}
                 </p>
-              </div>
+              </motion.div>
             ))}
-          </div>
-        </section>
+          </motion.div>
+        </motion.section>
 
         {/* Projects Section */}
-        <section
+        <motion.section
+          {...sectionMotion}
           id="projects"
           className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-24 border-t border-gray-200 dark:border-gray-800"
         >
@@ -365,284 +427,322 @@ export default function Home() {
             ))}
           </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filteredProjects.map((project) => (
-              <Card
+          <motion.div
+            key={filterTag ?? "all"}
+            variants={staggerVariants}
+            initial="hidden"
+            animate="show"
+            className="grid md:grid-cols-2 lg:grid-cols-3 gap-6"
+          >
+            {filteredProjects.map((project, idx) => (
+              <motion.div
                 key={project.id}
-                className="border-gray-200 dark:border-gray-800 bg-white dark:bg-black hover:border-gray-400 dark:hover:border-gray-600 transition-colors"
+                variants={slideVariants}
+                custom={idx % 2 === 0 ? "left" : "right"}
               >
-                <CardHeader className="pb-3">
-                  <CardTitle className="text-base font-medium">
-                    {project.title}
-                  </CardTitle>
-                  <CardDescription className="text-sm text-gray-600 dark:text-gray-400">
-                    {project.description}
-                  </CardDescription>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <div className="flex flex-wrap gap-2">
-                    {project.tags.map((tag) => (
-                      <Badge
-                        key={tag}
+                <Card className="border-gray-200 dark:border-gray-800 bg-white dark:bg-black hover:border-gray-400 dark:hover:border-gray-600 transition-colors">
+                  <CardHeader className="pb-3">
+                    <CardTitle className="text-base font-medium">
+                      {project.title}
+                    </CardTitle>
+                    <CardDescription className="text-sm text-gray-600 dark:text-gray-400">
+                      {project.description}
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    <div className="flex flex-wrap gap-2">
+                      {project.tags.map((tag) => (
+                        <Badge
+                          key={tag}
+                          variant="outline"
+                          className="text-xs font-normal cursor-pointer hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black"
+                          onClick={() => setFilterTag(tag)}
+                        >
+                          {tag}
+                        </Badge>
+                      ))}
+                    </div>
+                    <div className="flex items-center gap-4 text-xs text-gray-600 dark:text-gray-400 mb-3">
+                      <span>⭐ {project.stars}</span>
+                      <span>🔀 {project.forks}</span>
+                    </div>
+                    <div className="flex gap-2 pt-2">
+                      <Button
+                        asChild
+                        size="sm"
                         variant="outline"
-                        className="text-xs font-normal cursor-pointer hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black"
-                        onClick={() => setFilterTag(tag)}
+                        className="flex-1"
                       >
-                        {tag}
-                      </Badge>
-                    ))}
-                  </div>
-                  <div className="flex items-center gap-4 text-xs text-gray-600 dark:text-gray-400 mb-3">
-                    <span>⭐ {project.stars}</span>
-                    <span>🔀 {project.forks}</span>
-                  </div>
-                  <div className="flex gap-2 pt-2">
-                    <Button
-                      asChild
-                      size="sm"
-                      variant="outline"
-                      className="flex-1"
-                    >
-                      <Link
-                        href={project.link}
-                        className="flex items-center gap-2"
+                        <Link
+                          href={project.link}
+                          className="flex items-center gap-2"
+                        >
+                          <ExternalLink size={14} />
+                          View
+                        </Link>
+                      </Button>
+                      <Button
+                        asChild
+                        size="sm"
+                        variant="outline"
+                        className="flex-1"
                       >
-                        <ExternalLink size={14} />
-                        View
-                      </Link>
-                    </Button>
-                    <Button
-                      asChild
-                      size="sm"
-                      variant="outline"
-                      className="flex-1"
-                    >
-                      <a
-                        href={project.github}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="flex items-center gap-2"
-                      >
-                        <Github size={14} />
-                        Code
-                      </a>
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
+                        <a
+                          href={project.github}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="flex items-center gap-2"
+                        >
+                          <Github size={14} />
+                          Code
+                        </a>
+                      </Button>
+                    </div>
+                  </CardContent>
+                </Card>
+              </motion.div>
             ))}
-          </div>
-        </section>
+          </motion.div>
+        </motion.section>
 
         {/* GitHub Stats Section */}
-        <section className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-24 border-t border-gray-200 dark:border-gray-800">
+        <motion.section
+          {...sectionMotion}
+          className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-24 border-t border-gray-200 dark:border-gray-800"
+        >
           <h2 className="text-3xl font-light tracking-tight mb-12">
             GitHub Activity
           </h2>
 
           {/* Stats Grid with Icons */}
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
-            <Card className="border-gray-200 dark:border-gray-800">
-              <CardHeader className="pb-3">
-                <div className="flex items-center gap-2">
-                  <Code2
-                    size={20}
-                    className="text-gray-600 dark:text-gray-400"
-                  />
-                  <CardTitle className="text-sm font-medium">
-                    Repositories
-                  </CardTitle>
-                </div>
-              </CardHeader>
-              <CardContent>
-                <p className="text-3xl font-light">50+</p>
-                <p className="text-xs text-gray-600 dark:text-gray-400 mt-1">
-                  Public repos
-                </p>
-              </CardContent>
-            </Card>
+          <motion.div
+            variants={staggerVariants}
+            className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-12"
+          >
+            <motion.div variants={itemVariants}>
+              <Card className="border-gray-200 dark:border-gray-800">
+                <CardHeader className="pb-3">
+                  <div className="flex items-center gap-2">
+                    <Code2
+                      size={20}
+                      className="text-gray-600 dark:text-gray-400"
+                    />
+                    <CardTitle className="text-sm font-medium">
+                      Repositories
+                    </CardTitle>
+                  </div>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-3xl font-light">50+</p>
+                  <p className="text-xs text-gray-600 dark:text-gray-400 mt-1">
+                    Public repos
+                  </p>
+                </CardContent>
+              </Card>
+            </motion.div>
 
-            <Card className="border-gray-200 dark:border-gray-800">
-              <CardHeader className="pb-3">
-                <div className="flex items-center gap-2">
-                  <Star
-                    size={20}
-                    className="text-gray-600 dark:text-gray-400"
-                  />
-                  <CardTitle className="text-sm font-medium">
-                    Stars Earned
-                  </CardTitle>
-                </div>
-              </CardHeader>
-              <CardContent>
-                <p className="text-3xl font-light">200+</p>
-                <p className="text-xs text-gray-600 dark:text-gray-400 mt-1">
-                  Across projects
-                </p>
-              </CardContent>
-            </Card>
+            <motion.div variants={itemVariants}>
+              <Card className="border-gray-200 dark:border-gray-800">
+                <CardHeader className="pb-3">
+                  <div className="flex items-center gap-2">
+                    <Star
+                      size={20}
+                      className="text-gray-600 dark:text-gray-400"
+                    />
+                    <CardTitle className="text-sm font-medium">
+                      Stars Earned
+                    </CardTitle>
+                  </div>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-3xl font-light">200+</p>
+                  <p className="text-xs text-gray-600 dark:text-gray-400 mt-1">
+                    Across projects
+                  </p>
+                </CardContent>
+              </Card>
+            </motion.div>
 
-            <Card className="border-gray-200 dark:border-gray-800">
-              <CardHeader className="pb-3">
-                <div className="flex items-center gap-2">
-                  <GitCommit
-                    size={20}
-                    className="text-gray-600 dark:text-gray-400"
-                  />
-                  <CardTitle className="text-sm font-medium">
-                    Contributions
-                  </CardTitle>
-                </div>
-              </CardHeader>
-              <CardContent>
-                <p className="text-3xl font-light">1.2K+</p>
-                <p className="text-xs text-gray-600 dark:text-gray-400 mt-1">
-                  This year
-                </p>
-              </CardContent>
-            </Card>
+            <motion.div variants={itemVariants}>
+              <Card className="border-gray-200 dark:border-gray-800">
+                <CardHeader className="pb-3">
+                  <div className="flex items-center gap-2">
+                    <GitCommit
+                      size={20}
+                      className="text-gray-600 dark:text-gray-400"
+                    />
+                    <CardTitle className="text-sm font-medium">
+                      Contributions
+                    </CardTitle>
+                  </div>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-3xl font-light">1.2K+</p>
+                  <p className="text-xs text-gray-600 dark:text-gray-400 mt-1">
+                    This year
+                  </p>
+                </CardContent>
+              </Card>
+            </motion.div>
 
-            <Card className="border-gray-200 dark:border-gray-800">
-              <CardHeader className="pb-3">
-                <div className="flex items-center gap-2">
-                  <Users
-                    size={20}
-                    className="text-gray-600 dark:text-gray-400"
-                  />
-                  <CardTitle className="text-sm font-medium">
-                    Followers
-                  </CardTitle>
-                </div>
-              </CardHeader>
-              <CardContent>
-                <p className="text-3xl font-light">150+</p>
-                <p className="text-xs text-gray-600 dark:text-gray-400 mt-1">
-                  GitHub followers
-                </p>
-              </CardContent>
-            </Card>
-          </div>
+            <motion.div variants={itemVariants}>
+              <Card className="border-gray-200 dark:border-gray-800">
+                <CardHeader className="pb-3">
+                  <div className="flex items-center gap-2">
+                    <Users
+                      size={20}
+                      className="text-gray-600 dark:text-gray-400"
+                    />
+                    <CardTitle className="text-sm font-medium">
+                      Followers
+                    </CardTitle>
+                  </div>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-3xl font-light">150+</p>
+                  <p className="text-xs text-gray-600 dark:text-gray-400 mt-1">
+                    GitHub followers
+                  </p>
+                </CardContent>
+              </Card>
+            </motion.div>
+          </motion.div>
 
           {/* Contribution Streak */}
-          <Card className="border-gray-200 dark:border-gray-800 mb-12">
-            <CardHeader>
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <Calendar
+          <motion.div variants={itemVariants}>
+            <Card className="border-gray-200 dark:border-gray-800 mb-12">
+              <CardHeader>
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <Calendar
+                      size={20}
+                      className="text-gray-600 dark:text-gray-400"
+                    />
+                    <CardTitle className="text-base">
+                      Contribution Streak
+                    </CardTitle>
+                  </div>
+                  <TrendingUp
                     size={20}
                     className="text-gray-600 dark:text-gray-400"
                   />
-                  <CardTitle className="text-base">
-                    Contribution Streak
-                  </CardTitle>
                 </div>
-                <TrendingUp
-                  size={20}
-                  className="text-gray-600 dark:text-gray-400"
-                />
-              </div>
-            </CardHeader>
-            <CardContent>
-              <div className="grid grid-cols-3 gap-8 text-center">
-                <div>
-                  <p className="text-2xl font-light mb-1">45</p>
-                  <p className="text-xs text-gray-600 dark:text-gray-400">
-                    Current Streak
-                  </p>
+              </CardHeader>
+              <CardContent>
+                <div className="grid grid-cols-3 gap-8 text-center">
+                  <div>
+                    <p className="text-2xl font-light mb-1">45</p>
+                    <p className="text-xs text-gray-600 dark:text-gray-400">
+                      Current Streak
+                    </p>
+                  </div>
+                  <div>
+                    <p className="text-2xl font-light mb-1">120</p>
+                    <p className="text-xs text-gray-600 dark:text-gray-400">
+                      Longest Streak
+                    </p>
+                  </div>
+                  <div>
+                    <p className="text-2xl font-light mb-1">365</p>
+                    <p className="text-xs text-gray-600 dark:text-gray-400">
+                      Days Active
+                    </p>
+                  </div>
                 </div>
-                <div>
-                  <p className="text-2xl font-light mb-1">120</p>
-                  <p className="text-xs text-gray-600 dark:text-gray-400">
-                    Longest Streak
-                  </p>
-                </div>
-                <div>
-                  <p className="text-2xl font-light mb-1">365</p>
-                  <p className="text-xs text-gray-600 dark:text-gray-400">
-                    Days Active
-                  </p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
+              </CardContent>
+            </Card>
+          </motion.div>
 
           {/* Top Languages */}
-          <Card className="border-gray-200 dark:border-gray-800 mb-12">
-            <CardHeader>
-              <CardTitle className="text-base">Top Languages</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                {[
-                  { name: "TypeScript", percent: 45, color: "bg-blue-500" },
-                  { name: "JavaScript", percent: 30, color: "bg-yellow-500" },
-                  { name: "Python", percent: 15, color: "bg-green-500" },
-                  { name: "CSS", percent: 10, color: "bg-purple-500" },
-                ].map((lang) => (
-                  <div key={lang.name}>
-                    <div className="flex justify-between text-sm mb-2">
-                      <span>{lang.name}</span>
-                      <span className="text-gray-600 dark:text-gray-400">
-                        {lang.percent}%
-                      </span>
+          <motion.div variants={itemVariants}>
+            <Card className="border-gray-200 dark:border-gray-800 mb-12">
+              <CardHeader>
+                <CardTitle className="text-base">Top Languages</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  {[
+                    { name: "TypeScript", percent: 45, color: "bg-blue-500" },
+                    { name: "JavaScript", percent: 30, color: "bg-yellow-500" },
+                    { name: "Python", percent: 15, color: "bg-green-500" },
+                    { name: "CSS", percent: 10, color: "bg-purple-500" },
+                  ].map((lang) => (
+                    <div key={lang.name}>
+                      <div className="flex justify-between text-sm mb-2">
+                        <span>{lang.name}</span>
+                        <span className="text-gray-600 dark:text-gray-400">
+                          {lang.percent}%
+                        </span>
+                      </div>
+                      <div className="h-2 bg-gray-200 dark:bg-gray-800 rounded-full overflow-hidden">
+                        <div
+                          className={`h-full ${lang.color}`}
+                          style={{ width: `${lang.percent}%` }}
+                        />
+                      </div>
                     </div>
-                    <div className="h-2 bg-gray-200 dark:bg-gray-800 rounded-full overflow-hidden">
-                      <div
-                        className={`h-full ${lang.color}`}
-                        style={{ width: `${lang.percent}%` }}
-                      />
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+          </motion.div>
 
           {/* Achievements */}
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            <Card className="border-gray-200 dark:border-gray-800 text-center">
-              <CardContent className="pt-6">
-                <Trophy className="mx-auto mb-3 text-yellow-500" size={32} />
-                <p className="text-sm font-medium mb-1">Top Contributor</p>
-                <p className="text-xs text-gray-600 dark:text-gray-400">
-                  Open Source
-                </p>
-              </CardContent>
-            </Card>
+          <motion.div
+            variants={staggerVariants}
+            className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6"
+          >
+            <motion.div variants={itemVariants}>
+              <Card className="border-gray-200 dark:border-gray-800 text-center">
+                <CardContent className="pt-6">
+                  <Trophy className="mx-auto mb-3 text-yellow-500" size={32} />
+                  <p className="text-sm font-medium mb-1">Top Contributor</p>
+                  <p className="text-xs text-gray-600 dark:text-gray-400">
+                    Open Source
+                  </p>
+                </CardContent>
+              </Card>
+            </motion.div>
 
-            <Card className="border-gray-200 dark:border-gray-800 text-center">
-              <CardContent className="pt-6">
-                <Star className="mx-auto mb-3 text-orange-500" size={32} />
-                <p className="text-sm font-medium mb-1">Early Adopter</p>
-                <p className="text-xs text-gray-600 dark:text-gray-400">
-                  GitHub Actions
-                </p>
-              </CardContent>
-            </Card>
+            <motion.div variants={itemVariants}>
+              <Card className="border-gray-200 dark:border-gray-800 text-center">
+                <CardContent className="pt-6">
+                  <Star className="mx-auto mb-3 text-orange-500" size={32} />
+                  <p className="text-sm font-medium mb-1">Early Adopter</p>
+                  <p className="text-xs text-gray-600 dark:text-gray-400">
+                    GitHub Actions
+                  </p>
+                </CardContent>
+              </Card>
+            </motion.div>
 
-            <Card className="border-gray-200 dark:border-gray-800 text-center">
-              <CardContent className="pt-6">
-                <GitFork className="mx-auto mb-3 text-blue-500" size={32} />
-                <p className="text-sm font-medium mb-1">Collaborator</p>
-                <p className="text-xs text-gray-600 dark:text-gray-400">
-                  20+ Projects
-                </p>
-              </CardContent>
-            </Card>
+            <motion.div variants={itemVariants}>
+              <Card className="border-gray-200 dark:border-gray-800 text-center">
+                <CardContent className="pt-6">
+                  <GitFork className="mx-auto mb-3 text-blue-500" size={32} />
+                  <p className="text-sm font-medium mb-1">Collaborator</p>
+                  <p className="text-xs text-gray-600 dark:text-gray-400">
+                    20+ Projects
+                  </p>
+                </CardContent>
+              </Card>
+            </motion.div>
 
-            <Card className="border-gray-200 dark:border-gray-800 text-center">
-              <CardContent className="pt-6">
-                <Eye className="mx-auto mb-3 text-green-500" size={32} />
-                <p className="text-sm font-medium mb-1">Profile Views</p>
-                <p className="text-xs text-gray-600 dark:text-gray-400">
-                  5K+ visits
-                </p>
-              </CardContent>
-            </Card>
-          </div>
+            <motion.div variants={itemVariants}>
+              <Card className="border-gray-200 dark:border-gray-800 text-center">
+                <CardContent className="pt-6">
+                  <Eye className="mx-auto mb-3 text-green-500" size={32} />
+                  <p className="text-sm font-medium mb-1">Profile Views</p>
+                  <p className="text-xs text-gray-600 dark:text-gray-400">
+                    5K+ visits
+                  </p>
+                </CardContent>
+              </Card>
+            </motion.div>
+          </motion.div>
 
           {/* GitHub Link */}
-          <div className="mt-12 text-center">
+          <motion.div variants={itemVariants} className="mt-12 text-center">
             <Button asChild variant="outline">
               <a
                 href={`https://github.com/${githubUsername}`}
@@ -654,17 +754,24 @@ export default function Home() {
                 View Full GitHub Profile
               </a>
             </Button>
-          </div>
-        </section>
+          </motion.div>
+        </motion.section>
 
         {/* Experience Section */}
-        <section className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-24 border-t border-gray-200 dark:border-gray-800">
+        <motion.section
+          {...sectionMotion}
+          className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-24 border-t border-gray-200 dark:border-gray-800"
+        >
           <h2 className="text-3xl font-light tracking-tight mb-12">
             Experience
           </h2>
-          <div className="space-y-8">
+          <motion.div variants={staggerVariants} className="space-y-8">
             {experience.map((exp, idx) => (
-              <div key={idx} className="flex gap-6">
+              <motion.div
+                key={idx}
+                variants={itemVariants}
+                className="flex gap-6"
+              >
                 <div className="min-w-fit">
                   <div className="text-sm font-semibold">{exp.year}</div>
                 </div>
@@ -677,17 +784,20 @@ export default function Home() {
                     {exp.description}
                   </p>
                 </div>
-              </div>
+              </motion.div>
             ))}
-          </div>
-        </section>
+          </motion.div>
+        </motion.section>
 
         {/* Skills Section */}
-        <section className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-24 border-t border-gray-200 dark:border-gray-800">
+        <motion.section
+          {...sectionMotion}
+          className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-24 border-t border-gray-200 dark:border-gray-800"
+        >
           <h2 className="text-3xl font-light tracking-tight mb-12">Skills</h2>
 
           {/* Tech Stack Badges */}
-          <div className="mb-12">
+          <motion.div variants={itemVariants} className="mb-12">
             <h3 className="text-sm font-medium mb-6">Tech Stack</h3>
             <div className="flex flex-wrap gap-2">
               <img
@@ -726,12 +836,31 @@ export default function Home() {
                 src="https://img.shields.io/badge/VS_Code-007ACC?style=for-the-badge&logo=visualstudiocode&logoColor=white"
                 alt="VS Code"
               />
+              <img
+                src="https://img.shields.io/badge/Spring_Boot-6DB33F?style=for-the-badge&logo=springboot&logoColor=white"
+                alt="Spring Boot"
+              />
+              <img
+                src="https://img.shields.io/badge/Jenkins_CI%2FCD-D24939?style=for-the-badge&logo=jenkins&logoColor=white"
+                alt="Jenkins CI/CD"
+              />
+              <img
+                src="https://img.shields.io/badge/.NET-512BD4?style=for-the-badge&logo=dotnet&logoColor=white"
+                alt=".NET"
+              />
             </div>
-          </div>
+          </motion.div>
 
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          <motion.div
+            variants={staggerVariants}
+            className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6"
+          >
             {skills.map((skill) => (
-              <div key={skill.category} className="space-y-3">
+              <motion.div
+                key={skill.category}
+                variants={itemVariants}
+                className="space-y-3"
+              >
                 <h3 className="text-sm font-medium">{skill.category}</h3>
                 <ul className="space-y-2">
                   {skill.items.map((item) => (
@@ -743,43 +872,61 @@ export default function Home() {
                     </li>
                   ))}
                 </ul>
-              </div>
+              </motion.div>
             ))}
-          </div>
-        </section>
+          </motion.div>
+        </motion.section>
 
         {/* Testimonials Section */}
-        <section className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-24 border-t border-gray-200 dark:border-gray-800">
+        <motion.section
+          {...sectionMotion}
+          className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-24 border-t border-gray-200 dark:border-gray-800"
+        >
           <h2 className="text-3xl font-light tracking-tight mb-12">
             Testimonials
           </h2>
-          <div className="grid md:grid-cols-2 gap-6">
+          <motion.div
+            variants={staggerVariants}
+            className="grid md:grid-cols-2 gap-6"
+          >
             {testimonials.map((testimonial, idx) => (
-              <Card key={idx} className="border-gray-200 dark:border-gray-800">
-                <CardHeader>
-                  <p className="text-sm text-gray-600 dark:text-gray-400 mb-4 italic">
-                    "{testimonial.text}"
-                  </p>
-                  <div>
-                    <CardTitle className="text-base">
-                      {testimonial.name}
-                    </CardTitle>
-                    <CardDescription className="text-xs">
-                      {testimonial.role} at {testimonial.company}
-                    </CardDescription>
-                  </div>
-                </CardHeader>
-              </Card>
+              <motion.div
+                key={idx}
+                variants={slideVariants}
+                custom={idx % 2 === 0 ? "left" : "right"}
+              >
+                <Card className="border-gray-200 dark:border-gray-800">
+                  <CardHeader>
+                    <p className="text-sm text-gray-600 dark:text-gray-400 mb-4 italic">
+                      "{testimonial.text}"
+                    </p>
+                    <div>
+                      <CardTitle className="text-base">
+                        {testimonial.name}
+                      </CardTitle>
+                      <CardDescription className="text-xs">
+                        {testimonial.role} at {testimonial.company}
+                      </CardDescription>
+                    </div>
+                  </CardHeader>
+                </Card>
+              </motion.div>
             ))}
-          </div>
-        </section>
+          </motion.div>
+        </motion.section>
 
         {/* Blog/Articles Section */}
-        <section className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-24 border-t border-gray-200 dark:border-gray-800">
+        <motion.section
+          {...sectionMotion}
+          className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-24 border-t border-gray-200 dark:border-gray-800"
+        >
           <h2 className="text-3xl font-light tracking-tight mb-12">
             Latest Articles
           </h2>
-          <div className="grid md:grid-cols-2 gap-6">
+          <motion.div
+            variants={staggerVariants}
+            className="grid md:grid-cols-2 gap-6"
+          >
             {[
               {
                 title: "Building Modern Web Apps",
@@ -792,28 +939,32 @@ export default function Home() {
                 excerpt: "Advanced TypeScript patterns and techniques",
               },
             ].map((article, idx) => (
-              <Card
+              <motion.div
                 key={idx}
-                className="border-gray-200 dark:border-gray-800 hover:border-gray-400 dark:hover:border-gray-600 transition-colors cursor-pointer"
+                variants={slideVariants}
+                custom={idx % 2 === 0 ? "left" : "right"}
               >
-                <CardHeader>
-                  <CardTitle className="text-base">{article.title}</CardTitle>
-                  <CardDescription className="text-xs">
-                    {article.date}
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">
-                    {article.excerpt}
-                  </p>
-                </CardContent>
-              </Card>
+                <Card className="border-gray-200 dark:border-gray-800 hover:border-gray-400 dark:hover:border-gray-600 transition-colors cursor-pointer">
+                  <CardHeader>
+                    <CardTitle className="text-base">{article.title}</CardTitle>
+                    <CardDescription className="text-xs">
+                      {article.date}
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-sm text-gray-600 dark:text-gray-400">
+                      {article.excerpt}
+                    </p>
+                  </CardContent>
+                </Card>
+              </motion.div>
             ))}
-          </div>
-        </section>
+          </motion.div>
+        </motion.section>
 
         {/* Contact Section */}
-        <section
+        <motion.section
+          {...sectionMotion}
           ref={contactRef}
           id="contact"
           className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-24 border-t border-gray-200 dark:border-gray-800"
@@ -821,9 +972,12 @@ export default function Home() {
           <h2 className="text-3xl font-light tracking-tight mb-8">
             Get in Touch
           </h2>
-          <div className="grid md:grid-cols-2 gap-12">
+          <motion.div
+            variants={staggerVariants}
+            className="grid md:grid-cols-2 gap-12"
+          >
             {/* Contact Info */}
-            <div className="space-y-6">
+            <motion.div variants={itemVariants} className="space-y-6">
               <p className="text-gray-600 dark:text-gray-400">
                 Have a project or question? Feel free to reach out. I'm always
                 interested in hearing about new opportunities.
@@ -837,7 +991,7 @@ export default function Home() {
                   className="flex items-center gap-2 px-4 py-2 border border-gray-300 dark:border-gray-700 rounded hover:bg-gray-100 dark:hover:bg-gray-900 transition-colors text-sm"
                 >
                   <Copy size={16} />
-                  {copied ? "Copied!" : "your-email@example.com"}
+                  {copied ? "Copied!" : "thanhlong1393@gmail.com"}
                 </button>
               </div>
 
@@ -846,7 +1000,7 @@ export default function Home() {
                 <p className="text-sm font-medium">Follow</p>
                 <div className="flex gap-3">
                   <a
-                    href="https://github.com"
+                    href="https://github.com/sSyRuSs"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="p-2 border border-gray-300 dark:border-gray-700 rounded hover:bg-gray-100 dark:hover:bg-gray-900 transition-colors"
@@ -854,7 +1008,7 @@ export default function Home() {
                     <Github size={18} />
                   </a>
                   <a
-                    href="https://linkedin.com"
+                    href="https://www.linkedin.com/in/nguyexenlong0504"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="p-2 border border-gray-300 dark:border-gray-700 rounded hover:bg-gray-100 dark:hover:bg-gray-900 transition-colors"
@@ -871,10 +1025,14 @@ export default function Home() {
                   </a>
                 </div>
               </div>
-            </div>
+            </motion.div>
 
             {/* Contact Form */}
-            <form onSubmit={handleFormSubmit} className="space-y-4">
+            <motion.form
+              variants={itemVariants}
+              onSubmit={handleFormSubmit}
+              className="space-y-4"
+            >
               <div>
                 <label className="text-sm font-medium block mb-2">Name</label>
                 <input
@@ -916,9 +1074,9 @@ export default function Home() {
               <Button type="submit" className="w-full">
                 Send Message
               </Button>
-            </form>
-          </div>
-        </section>
+            </motion.form>
+          </motion.div>
+        </motion.section>
 
         {/* Footer */}
         <footer className="border-t border-gray-200 dark:border-gray-800">
