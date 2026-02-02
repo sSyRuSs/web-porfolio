@@ -749,10 +749,14 @@ export default function Home() {
               <CardContent>
                 <div className="space-y-4">
                   {[
-                    { name: "TypeScript", percent: 45, color: "bg-blue-500" },
-                    { name: "JavaScript", percent: 30, color: "bg-yellow-500" },
-                    { name: "Python", percent: 15, color: "bg-green-500" },
-                    { name: "CSS", percent: 10, color: "bg-purple-500" },
+                    { name: "Java", percent: 40, color: "bg-orange-500" },
+                    { name: "C#", percent: 30, color: "bg-purple-500" },
+                    { name: "Dart", percent: 20, color: "bg-sky-500" },
+                    {
+                      name: "TypeScript",
+                      percent: 10,
+                      color: "bg-blue-500",
+                    },
                   ].map((lang) => (
                     <div key={lang.name}>
                       <div className="flex justify-between text-sm mb-2">
@@ -942,7 +946,7 @@ export default function Home() {
 
           <motion.div
             variants={staggerVariants}
-            className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6"
+            className="grid grid-cols-4 gap-4 sm:gap-6"
           >
             {skills.map((skill) => (
               <motion.div
