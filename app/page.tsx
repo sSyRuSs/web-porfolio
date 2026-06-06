@@ -267,19 +267,7 @@ export default function Home() {
       forks: 5,
     },
   ];
-
-  const experience = [
-    {
-      year: "2024",
-      title: "Senior Developer",
-      company: "Tech Company",
-      description:
-        "Leading frontend development and mentoring junior developers",
-    },
-    {
-      year: "2023",
-      title: "Full Stack Developer",
-      company: "IVS
+  
   // GitHub username - thay bằng username thật của bạn
   const githubUsername = "sSyRuSs";
 
