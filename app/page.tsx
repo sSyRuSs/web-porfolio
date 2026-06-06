@@ -170,7 +170,7 @@ export default function Home() {
       description: "A web-based auction system for agricultural products",
       tags: ["Spring Boot", "Jenkins", "NextJS"],
       github: `https://github.com/${githubUsername}/agricultural-auction-web-system`,
-      link: "#",
+      link: "https://ssyruss.github.io/Demo_CMMS/",
       stars: 28,
       forks: 5,
     },
@@ -187,13 +187,154 @@ export default function Home() {
     {
       year: "2023",
       title: "Full Stack Developer",
-      company: "StartUp Co",
+      company: "IVS
+  // GitHub username - thay bằng username thật của bạn
+  const githubUsername = "sSyRuSs";
+
+  const projects = [
+    {
+      id: 1,
+      title: "ERP-CMMS System",
+      description:
+        "A modern web application built with Next.js and Spring Boot",
+      tags: ["Next.js", "Spring Boot", "Flutter"],
+      github: `https://github.com/${githubUsername}/erp-cmms-system`,
+      link: "#",
+      stars: 45,
+      forks: 12,
+    },
+    {
+      id: 2,
+      title: "STPMS",
+      description: "HUIT Student Training Point Management System",
+      tags: [".NET", "Flutter", "Azure"],
+      github: `https://github.com/${githubUsername}/stpms`,
+      link: "#",
+      stars: 32,
+      forks: 8,
+    },
+    {
+      id: 3,
+      title: "Agricultural Auction Web System",
+      description: "A web-based auction system for agricultural products",
+      tags: ["Spring Boot", "Jenkins", "NextJS"],
+      github: `https://github.com/${githubUsername}/agricultural-auction-web-system`,
+      link: "https://ssyruss.github.io/Demo_CMMS/",
+      stars: 28,
+      forks: 5,
+    },
+  ];
+
+  const experience = [
+    {
+      year: "2024",
+      title: "Software Engineer",
+      company: "RoboMain };
+
+  // GitHub username - thay bằng username thật của bạn
+  const githubUsername = "sSyRuSs";
+
+  const projects = [
+    {
+      id: 1,
+      title: "ERP-CMMS System",
+      description:
+        "A modern web application built with Next.js and Spring Boot",
+      tags: ["Next.js", "Spring Boot", "Flutter"],
+      github: `https://github.com/${githubUsername}/erp-cmms-system`,
+      link: "#",
+      stars: 45,
+      forks: 12,
+    },
+    {
+      id: 2,
+      title: "STPMS",
+      description: "HUIT Student Training Point Management System",
+      tags: [".NET", "Flutter", "Azure"],
+      github: `https://github.com/${githubUsername}/stpms`,
+      link: "#",
+      stars: 32,
+      forks: 8,
+    },
+    {
+      id: 3,
+      title: "Agricultural Auction Web System",
+      description: "A web-based auction system for agricultural products",
+      tags: ["Spring Boot", "Jenkins", "NextJS"],
+      github: `https://github.com/${githubUsername}/agricultural-auction-web-system`,
+      link: "https://ssyruss.github.io/Demo_CMMS/",
+      stars: 28,
+      forks: 5,
+    },
+  ];
+
+  const experience = [
+    {
+      year: "2024",
+      title: "Senior Developer",
+      company: "Tech Company",
+      description:
+        "Leading frontend development and mentoring junior developers",
+    },
+    {
+      year: "2023",
+      title: "Full Stack Developer",
+      company: "IVS
+  // GitHub username - thay bằng username thật của bạn
+  const githubUsername = "sSyRuSs";
+
+  const projects = [
+    {
+      id: 1,
+      title: "ERP-CMMS System",
+      description:
+        "A modern web application built with Next.js and Spring Boot",
+      tags: ["Next.js", "Spring Boot", "Flutter"],
+      github: `https://github.com/${githubUsername}/erp-cmms-system`,
+      link: "#",
+      stars: 45,
+      forks: 12,
+    },
+    {
+      id: 2,
+      title: "STPMS",
+      description: "HUIT Student Training Point Management System",
+      tags: [".NET", "Flutter", "Azure"],
+      github: `https://github.com/${githubUsername}/stpms`,
+      link: "#",
+      stars: 32,
+      forks: 8,
+    },
+    {
+      id: 3,
+      title: "Agricultural Auction Web System",
+      description: "A web-based auction system for agricultural products",
+      tags: ["Spring Boot", "Jenkins", "NextJS"],
+      github: `https://github.com/${githubUsername}/agricultural-auction-web-system`,
+      link: "https://ssyruss.github.io/Demo_CMMS/",
+      stars: 28,
+      forks: 5,
+    },
+  ];
+
+  const experience = [
+    {
+      year: "2024",
+      title: "Software Engineer",
+      company: "RoboMain",
+      description:
+        "Leading frontend development and mentoring junior developers",
+    },
+    {
+      year: "2023",
+      title: "Full Stack Developer",
+      company: "IVS Joint Stock Company",
       description: "Built and deployed multiple production applications",
     },
     {
       year: "2022",
       title: "Junior Developer",
-      company: "First Company",
+      company: "IDX - Digital Transformation Institute, HUIT",
       description: "Started my journey in web development",
     },
   ];
@@ -331,7 +472,7 @@ export default function Home() {
             <motion.div variants={itemVariants} className="space-y-6">
               <div>
                 <h1 className="text-5xl sm:text-6xl font-light tracking-tight mb-4 bg-gradient-to-r from-blue-600 via-purple-600 to-cyan-600 bg-clip-text text-transparent dark:from-blue-400 dark:via-purple-400 dark:to-cyan-400">
-                  Hi, I'm a developer
+                  Hi, I'm a software developer
                 </h1>
                 <p className="text-lg text-gray-600 dark:text-gray-400 max-w-2xl leading-relaxed">
                   I create clean, functional web experiences. Focused on
