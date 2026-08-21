@@ -46,7 +46,17 @@ export default function Home() {
     email: "",
     message: "",
   });
+  const [scrollY, setScrollY] = useState(0);
   const contactRef = useRef<HTMLDivElement>(null);
+
+  // Parallax scroll effect
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrollY(window.scrollY);
+    };
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   const sectionVariants = {
     hidden: { opacity: 0, y: 24 },
@@ -262,13 +272,64 @@ export default function Home() {
 
   return (
     <div className={isDark ? "dark" : ""}>
-      <div className="min-h-screen bg-white dark:bg-black text-black dark:text-white transition-colors">
+      <div className="min-h-screen bg-white dark:bg-black text-black dark:text-white transition-colors overflow-x-hidden">
+        {/* Parallax Background Elements */}
+        <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
+          {/* Gradient Orbs */}
+          <motion.div
+            animate={{
+              y: scrollY * 0.3,
+              x: scrollY * 0.05,
+            }}
+            className="absolute top-20 left-10 w-72 h-72 bg-gradient-to-r from-blue-400/20 to-purple-400/20 rounded-full blur-3xl"
+          />
+          <motion.div
+            animate={{
+              y: scrollY * 0.5,
+              x: -scrollY * 0.08,
+            }}
+            className="absolute top-40 right-10 w-96 h-96 bg-gradient-to-r from-purple-400/20 to-pink-400/20 rounded-full blur-3xl"
+          />
+          <motion.div
+            animate={{
+              y: scrollY * 0.2,
+              x: scrollY * 0.03,
+            }}
+            className="absolute bottom-40 left-1/3 w-80 h-80 bg-gradient-to-r from-cyan-400/20 to-blue-400/20 rounded-full blur-3xl"
+          />
+          {/* Floating Particles */}
+          {[...Array(6)].map((_, i) => (
+            <motion.div
+              key={i}
+              animate={{
+                y: scrollY * (0.1 + i * 0.05),
+                x: Math.sin(i) * 20,
+              }}
+              className={`absolute w-2 h-2 rounded-full ${
+                i % 3 === 0
+                  ? "bg-blue-400/30"
+                  : i % 3 === 1
+                  ? "bg-purple-400/30"
+                  : "bg-cyan-400/30"
+              }`}
+              style={{
+                top: `${20 + i * 15}%`,
+                left: `${10 + i * 12}%`,
+              }}
+            />
+          ))}
+        </div>
+
         {/* Navigation */}
-        <nav className="sticky top-0 z-50 border-b border-gray-200 dark:border-gray-800 bg-white/95 dark:bg-black/95">
+        <nav className="sticky top-0 z-50 border-b border-gray-200 dark:border-gray-800 bg-white/80 dark:bg-black/80 backdrop-blur-xl">
           <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
-            <div className="text-lg font-semibold tracking-tight">
+            <motion.div
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              className="text-lg font-semibold tracking-tight bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent"
+            >
               Nguyễn Thành Long
-            </div>
+            </motion.div>
             <div className="flex items-center gap-2">
               <button
                 onClick={() =>
@@ -293,26 +354,29 @@ export default function Home() {
         {/* Hero Section */}
         <motion.section
           {...sectionMotion}
-          className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-24 sm:py-32"
+          className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-24 sm:py-32 relative z-10"
         >
           <motion.div
             variants={staggerVariants}
             className="grid md:grid-cols-[auto_1fr] gap-12 items-center"
           >
-            {/* Profile Image */}
+            {/* Profile Image with Enhanced Parallax */}
             <motion.div
               variants={rotateVariants}
               whileInView="show"
               initial="hidden"
               viewport={{ once: true }}
               className="relative group"
+              style={{
+                transform: `translateY(${scrollY * 0.1}px)`,
+              }}
             >
               <motion.div
                 variants={glowVariants}
                 whileInView="show"
                 initial="hidden"
                 viewport={{ once: true }}
-                className="w-48 h-48 md:w-64 md:h-64 rounded-2xl overflow-hidden border-2 border-gray-200 dark:border-gray-800 transition-all group-hover:border-gray-400 dark:group-hover:border-gray-600"
+                className="w-48 h-48 md:w-64 md:h-64 rounded-2xl overflow-hidden border-2 border-gray-200 dark:border-gray-800 transition-all group-hover:border-gray-400 dark:group-hover:border-gray-600 shadow-2xl shadow-blue-500/20"
               >
                 <Image
                   src={`${basePath}/images/IMG_9092.JPG`}
@@ -323,25 +387,49 @@ export default function Home() {
                   priority
                 />
               </motion.div>
-              {/* Decorative ring */}
-              <div className="absolute -inset-4 rounded-2xl border border-gray-200 dark:border-gray-800 -z-10 group-hover:border-gray-300 dark:group-hover:border-gray-700 transition-all"></div>
+              {/* Animated decorative rings */}
+              <motion.div
+                animate={{ rotate: 360 }}
+                transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+                className="absolute -inset-4 rounded-2xl border border-dashed border-gray-300 dark:border-gray-700 -z-10"
+              />
+              <motion.div
+                animate={{ rotate: -360 }}
+                transition={{ duration: 30, repeat: Infinity, ease: "linear" }}
+                className="absolute -inset-8 rounded-2xl border border-gray-200 dark:border-gray-800 -z-20 opacity-50"
+              />
             </motion.div>
 
             {/* Text Content */}
             <motion.div variants={itemVariants} className="space-y-6">
               <div>
-                <h1 className="text-5xl sm:text-6xl font-light tracking-tight mb-4 bg-gradient-to-r from-blue-600 via-purple-600 to-cyan-600 bg-clip-text text-transparent dark:from-blue-400 dark:via-purple-400 dark:to-cyan-400">
+                <motion.h1
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.2 }}
+                  className="text-5xl sm:text-6xl font-light tracking-tight mb-4 bg-gradient-to-r from-blue-600 via-purple-600 to-cyan-600 bg-clip-text text-transparent dark:from-blue-400 dark:via-purple-400 dark:to-cyan-400 animate-gradient"
+                >
                   Hi, I'm a software developer
-                </h1>
-                <p className="text-lg text-gray-600 dark:text-gray-400 max-w-2xl leading-relaxed">
+                </motion.h1>
+                <motion.p
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.3 }}
+                  className="text-lg text-gray-600 dark:text-gray-400 max-w-2xl leading-relaxed"
+                >
                   I create clean, functional web experiences. Focused on
                   building simple solutions to complex problems.
-                </p>
+                </motion.p>
               </div>
-              <div className="flex flex-col sm:flex-row gap-3 pt-4">
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.4 }}
+                className="flex flex-col sm:flex-row gap-3 pt-4"
+              >
                 <Button
                   asChild
-                  className="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800"
+                  className="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 shadow-lg shadow-blue-500/30 hover:shadow-blue-500/50 transition-all"
                 >
                   <Link href="#projects">View Work</Link>
                 </Button>
@@ -362,7 +450,7 @@ export default function Home() {
                     Download CV
                   </a>
                 </Button>
-              </div>
+              </motion.div>
             </motion.div>
           </motion.div>
         </motion.section>
@@ -370,26 +458,41 @@ export default function Home() {
         {/* About Section */}
         <motion.section
           {...sectionMotion}
-          className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-24 border-t border-gray-200 dark:border-gray-800"
+          className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-24 border-t border-gray-200 dark:border-gray-800 relative z-10"
         >
           <motion.div
             variants={staggerVariants}
             className="grid md:grid-cols-2 gap-12 items-center"
           >
-            {/* Image Side */}
-            <motion.div variants={scaleVariants} className="order-2 md:order-1">
-              <div className="relative">
-                <div className="aspect-[4/5] rounded-2xl overflow-hidden border border-gray-200 dark:border-gray-800">
+            {/* Image Side with Parallax */}
+            <motion.div
+              variants={scaleVariants}
+              className="order-2 md:order-1"
+              style={{
+                transform: `translateY(${scrollY * 0.05}px)`,
+              }}
+            >
+              <div className="relative group">
+                <div className="aspect-[4/5] rounded-2xl overflow-hidden border-2 border-gray-200 dark:border-gray-800 shadow-xl">
                   <Image
                     src={`${basePath}/images/IMG_9092.JPG`}
                     alt="About me"
                     width={400}
                     height={500}
-                    className="w-full h-full object-cover"
+                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                   />
                 </div>
-                {/* Decorative element */}
-                <div className="absolute -bottom-6 -right-6 w-32 h-32 border border-gray-200 dark:border-gray-800 rounded-2xl -z-10"></div>
+                {/* Animated decorative elements */}
+                <motion.div
+                  animate={{ rotate: 360 }}
+                  transition={{ duration: 40, repeat: Infinity, ease: "linear" }}
+                  className="absolute -bottom-6 -right-6 w-32 h-32 border-2 border-dashed border-purple-400/50 rounded-2xl"
+                />
+                <motion.div
+                  animate={{ scale: [1, 1.1, 1] }}
+                  transition={{ duration: 3, repeat: Infinity }}
+                  className="absolute -top-4 -left-4 w-24 h-24 bg-gradient-to-br from-blue-400/20 to-purple-400/20 rounded-full blur-xl"
+                />
               </div>
             </motion.div>
 
@@ -399,54 +502,84 @@ export default function Home() {
               className="order-1 md:order-2 space-y-6"
             >
               <div>
-                <h2 className="text-3xl font-light tracking-tight mb-4 bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent dark:from-purple-400 dark:to-pink-400">
+                <motion.h2
+                  initial={{ opacity: 0, x: 20 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  viewport={{ once: true }}
+                  className="text-3xl font-light tracking-tight mb-4 bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent dark:from-purple-400 dark:to-pink-400"
+                >
                   About Me
-                </h2>
+                </motion.h2>
                 <div className="space-y-4 text-gray-600 dark:text-gray-400">
-                  <p>
+                  <motion.p
+                    initial={{ opacity: 0, x: 20 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: 0.1 }}
+                  >
                     I'm a passionate Back-End Developer with hands-on experience
                     building scalable, high-performance systems, especially in
                     ERP-related domains. My main focus is on Java Spring Boot
                     and .NET, and I love automating workflows with Jenkins and
                     optimizing caching with Redis.
-                  </p>
-                  <p>
+                  </motion.p>
+                  <motion.p
+                    initial={{ opacity: 0, x: 20 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: 0.2 }}
+                  >
                     I enjoy turning complex requirements into reliable services
                     with clean architecture, solid testing, and performance in
                     mind. I'm always eager to learn the latest in backend tech
                     and DevOps.
-                  </p>
-                  <p>
+                  </motion.p>
+                  <motion.p
+                    initial={{ opacity: 0, x: 20 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: 0.3 }}
+                  >
                     When I'm not coding, you'll find me collaborating on open
                     source or connecting with like-minded developers in the
                     community.
-                  </p>
+                  </motion.p>
                 </div>
               </div>
 
               {/* Quick Facts */}
-              <div className="pt-4 space-y-3">
-                <div className="flex items-center gap-3 text-sm">
-                  <span className="font-medium min-w-[100px]">Location:</span>
+              <motion.div
+                initial={{ opacity: 0, x: 20 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: 0.4 }}
+                className="pt-4 space-y-3"
+              >
+                <div className="flex items-center gap-3 text-sm group">
+                  <span className="font-medium min-w-[100px] group-hover:text-purple-600 dark:group-hover:text-purple-400 transition-colors">
+                    Location:
+                  </span>
                   <span className="text-gray-600 dark:text-gray-400">
                     Vietnam
                   </span>
                 </div>
-                <div className="flex items-center gap-3 text-sm">
-                  <span className="font-medium min-w-[100px]">Experience:</span>
+                <div className="flex items-center gap-3 text-sm group">
+                  <span className="font-medium min-w-[100px] group-hover:text-purple-600 dark:group-hover:text-purple-400 transition-colors">
+                    Experience:
+                  </span>
                   <span className="text-gray-600 dark:text-gray-400">
                     2+ Years
                   </span>
                 </div>
-                <div className="flex items-center gap-3 text-sm">
-                  <span className="font-medium min-w-[100px]">
+                <div className="flex items-center gap-3 text-sm group">
+                  <span className="font-medium min-w-[100px] group-hover:text-purple-600 dark:group-hover:text-purple-400 transition-colors">
                     Availability:
                   </span>
                   <span className="text-gray-600 dark:text-gray-400">
                     Open to opportunities
                   </span>
                 </div>
-              </div>
+              </motion.div>
             </motion.div>
           </motion.div>
         </motion.section>
@@ -454,22 +587,29 @@ export default function Home() {
         {/* Stats Section */}
         <motion.section
           {...sectionMotion}
-          className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-24 border-t border-gray-200 dark:border-gray-800"
+          className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-24 border-t border-gray-200 dark:border-gray-800 relative z-10"
         >
           <motion.div
             variants={staggerVariants}
             className="grid grid-cols-3 gap-8"
           >
-            {stats.map((stat) => (
+            {stats.map((stat, idx) => (
               <motion.div
                 key={stat.label}
                 variants={scaleVariants}
-                className="text-center"
+                whileHover={{ scale: 1.05 }}
+                className="text-center group p-6 rounded-2xl bg-gradient-to-b from-gray-50 to-transparent dark:from-gray-900/50 transition-all"
               >
-                <div className="text-3xl sm:text-4xl font-light tracking-tight mb-2">
+                <motion.div
+                  initial={{ scale: 0.5, opacity: 0 }}
+                  whileInView={{ scale: 1, opacity: 1 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: idx * 0.1, type: "spring" }}
+                  className="text-3xl sm:text-4xl font-light tracking-tight mb-2 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent"
+                >
                   <Counter value={stat.value} />
-                </div>
-                <p className="text-sm text-gray-600 dark:text-gray-400">
+                </motion.div>
+                <p className="text-sm text-gray-600 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white transition-colors">
                   {stat.label}
                 </p>
               </motion.div>
