@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import { motion } from "framer-motion";
+import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
@@ -30,6 +30,15 @@ import {
   Users,
   Calendar,
   TrendingUp,
+  ArrowUp,
+  Check,
+  Sparkles,
+  Zap,
+  Award,
+  BookOpen,
+  MessageSquare,
+  ChevronRight,
+  Loader2,
 } from "lucide-react";
 
 export default function Home() {
@@ -47,15 +56,49 @@ export default function Home() {
     message: "",
   });
   const [scrollY, setScrollY] = useState(0);
+  const [showScrollTop, setShowScrollTop] = useState(false);
+  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  const [typedText, setTypedText] = useState("");
+  const [activeSkillTab, setActiveSkillTab] = useState("Frontend");
   const contactRef = useRef<HTMLDivElement>(null);
+  const heroRef = useRef<HTMLDivElement>(null);
+  
+  // Scroll progress for scroll-to-top button and progress bar
+  const { scrollYProgress } = useScroll();
+  const progressBarWidth = useTransform(scrollYProgress, [0, 1], ["0%", "100%"]);
+
+  // Typing animation for hero title
+  const fullTitle = "Software Developer";
+  useEffect(() => {
+    let index = 0;
+    const typingInterval = setInterval(() => {
+      if (index <= fullTitle.length) {
+        setTypedText(fullTitle.slice(0, index));
+        index++;
+      } else {
+        clearInterval(typingInterval);
+      }
+    }, 100);
+    return () => clearInterval(typingInterval);
+  }, []);
 
   // Parallax scroll effect
   useEffect(() => {
     const handleScroll = () => {
       setScrollY(window.scrollY);
+      setShowScrollTop(window.scrollY > 400);
     };
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  // Mouse tracking for interactive particles
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      setMousePosition({ x: e.clientX, y: e.clientY });
+    };
+    window.addEventListener("mousemove", handleMouseMove);
+    return () => window.removeEventListener("mousemove", handleMouseMove);
   }, []);
 
   const sectionVariants = {
@@ -229,24 +272,33 @@ export default function Home() {
     { label: "Happy Clients", value: "15+" },
   ];
 
-  const skills = [
-    {
-      category: "Frontend",
-      items: ["React", "TypeScript", "Tailwind CSS"],
-    },
-    {
-      category: "Backend",
-      items: ["Node.js", "Spring Boot", ".NET", "PostgreSQL", "REST API"],
-    },
-    {
-      category: "Tools",
-      items: ["Git", "Docker", "Jenkins CI/CD", "VS Code"],
-    },
-    {
-      category: "Other",
-      items: ["Web Design", "Performance", "Accessibility"],
-    },
-  ];
+  const skills = {
+    Frontend: [
+      { name: "React", level: 90 },
+      { name: "TypeScript", level: 85 },
+      { name: "Tailwind CSS", level: 95 },
+      { name: "Next.js", level: 88 },
+    ],
+    Backend: [
+      { name: "Node.js", level: 85 },
+      { name: "Spring Boot", level: 92 },
+      { name: ".NET", level: 80 },
+      { name: "PostgreSQL", level: 78 },
+      { name: "REST API", level: 90 },
+    ],
+    DevOps: [
+      { name: "Git", level: 92 },
+      { name: "Docker", level: 75 },
+      { name: "Jenkins CI/CD", level: 82 },
+      { name: "Azure", level: 70 },
+    ],
+    Other: [
+      { name: "Web Design", level: 85 },
+      { name: "Performance", level: 88 },
+      { name: "Accessibility", level: 80 },
+      { name: "Flutter", level: 75 },
+    ],
+  };
 
   const allTags = Array.from(new Set(projects.flatMap((p) => p.tags)));
   const filteredProjects = filterTag
@@ -273,8 +325,54 @@ export default function Home() {
   return (
     <div className={isDark ? "dark" : ""}>
       <div className="min-h-screen bg-white dark:bg-black text-black dark:text-white transition-colors overflow-x-hidden">
+        {/* Scroll Progress Bar */}
+        <motion.div
+          className="fixed top-0 left-0 right-0 h-1 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 z-[100]"
+          style={{ scaleX: progressBarWidth }}
+        />
+
+        {/* Scroll to Top Button */}
+        <AnimatePresence>
+          {showScrollTop && (
+            <motion.button
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.8 }}
+              onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+              className="fixed bottom-8 right-8 z-50 p-3 rounded-full bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg hover:shadow-xl hover:scale-110 transition-all"
+            >
+              <ArrowUp size={24} />
+            </motion.button>
+          )}
+        </AnimatePresence>
+
         {/* Parallax Background Elements */}
         <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
+          {/* Interactive Mouse-following Particles */}
+          {[...Array(8)].map((_, i) => (
+            <motion.div
+              key={i}
+              animate={{
+                x: mousePosition.x * (0.02 + i * 0.01) - (i * 50),
+                y: mousePosition.y * (0.02 + i * 0.01) - (i * 50),
+              }}
+              transition={{ type: "spring", damping: 30, stiffness: 200 }}
+              className={`absolute w-3 h-3 rounded-full ${
+                i % 4 === 0
+                  ? "bg-blue-400/40"
+                  : i % 4 === 1
+                  ? "bg-purple-400/40"
+                  : i % 4 === 2
+                  ? "bg-cyan-400/40"
+                  : "bg-pink-400/40"
+              } blur-sm`}
+              style={{
+                left: `${10 + i * 12}%`,
+                top: `${20 + i * 10}%`,
+              }}
+            />
+          ))}
+          
           {/* Gradient Orbs */}
           <motion.div
             animate={{
@@ -407,9 +505,19 @@ export default function Home() {
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.2 }}
-                  className="text-5xl sm:text-6xl font-light tracking-tight mb-4 bg-gradient-to-r from-blue-600 via-purple-600 to-cyan-600 bg-clip-text text-transparent dark:from-blue-400 dark:via-purple-400 dark:to-cyan-400 animate-gradient"
+                  className="text-5xl sm:text-6xl font-light tracking-tight mb-4 bg-gradient-to-r from-blue-600 via-purple-600 to-cyan-600 bg-clip-text text-transparent dark:from-blue-400 dark:via-purple-400 dark:to-cyan-400"
                 >
-                  Hi, I'm a software developer
+                  Hi, I'm a{" "}
+                  <span className="relative inline-block min-w-[300px]">
+                    {typedText}
+                    <motion.span
+                      animate={{ opacity: [1, 0, 1] }}
+                      transition={{ duration: 0.8, repeat: Infinity }}
+                      className="absolute right-[-10px] text-blue-600 dark:text-blue-400"
+                    >
+                      |
+                    </motion.span>
+                  </span>
                 </motion.h1>
                 <motion.p
                   initial={{ opacity: 0, y: 20 }}
@@ -1026,7 +1134,7 @@ export default function Home() {
           className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-24 border-t border-gray-200 dark:border-gray-800"
         >
           <h2 className="text-3xl font-light tracking-tight mb-12 bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent dark:from-indigo-400 dark:to-purple-400">
-            Skills
+            Skills & Expertise
           </h2>
 
           {/* Tech Stack Badges */}
@@ -1066,10 +1174,6 @@ export default function Home() {
                 alt="Docker"
               />
               <img
-                src="https://img.shields.io/badge/VS_Code-007ACC?style=for-the-badge&logo=visualstudiocode&logoColor=white"
-                alt="VS Code"
-              />
-              <img
                 src="https://img.shields.io/badge/Spring_Boot-6DB33F?style=for-the-badge&logo=springboot&logoColor=white"
                 alt="Spring Boot"
               />
@@ -1081,32 +1185,70 @@ export default function Home() {
                 src="https://img.shields.io/badge/.NET-512BD4?style=for-the-badge&logo=dotnet&logoColor=white"
                 alt=".NET"
               />
+              <img
+                src="https://img.shields.io/badge/Flutter-02569B?style=for-the-badge&logo=flutter&logoColor=white"
+                alt="Flutter"
+              />
+              <img
+                src="https://img.shields.io/badge/Azure-0089D6?style=for-the-badge&logo=microsoftazure&logoColor=white"
+                alt="Azure"
+              />
             </div>
           </motion.div>
 
-          <motion.div
-            variants={staggerVariants}
-            className="grid grid-cols-4 gap-4 sm:gap-6"
-          >
-            {skills.map((skill) => (
+          {/* Skill Tabs with Progress Bars */}
+          <motion.div variants={itemVariants}>
+            {/* Tab Buttons */}
+            <div className="flex flex-wrap gap-2 mb-8">
+              {Object.keys(skills).map((tab) => (
+                <button
+                  key={tab}
+                  onClick={() => setActiveSkillTab(tab)}
+                  className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${
+                    activeSkillTab === tab
+                      ? "bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg"
+                      : "bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-700"
+                  }`}
+                >
+                  {tab}
+                </button>
+              ))}
+            </div>
+
+            {/* Skill Progress Bars */}
+            <AnimatePresence mode="wait">
               <motion.div
-                key={skill.category}
-                variants={itemVariants}
-                className="space-y-3"
+                key={activeSkillTab}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -20 }}
+                transition={{ duration: 0.3 }}
+                className="grid md:grid-cols-2 gap-6"
               >
-                <h3 className="text-sm font-medium">{skill.category}</h3>
-                <ul className="space-y-2">
-                  {skill.items.map((item) => (
-                    <li
-                      key={item}
-                      className="text-sm text-gray-600 dark:text-gray-400"
-                    >
-                      {item}
-                    </li>
-                  ))}
-                </ul>
+                {skills[activeSkillTab as keyof typeof skills].map((skill, idx) => (
+                  <motion.div
+                    key={skill.name}
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: idx * 0.1 }}
+                    className="space-y-2"
+                  >
+                    <div className="flex justify-between items-center">
+                      <span className="text-sm font-medium">{skill.name}</span>
+                      <span className="text-xs text-gray-500">{skill.level}%</span>
+                    </div>
+                    <div className="h-3 bg-gray-200 dark:bg-gray-800 rounded-full overflow-hidden">
+                      <motion.div
+                        initial={{ width: 0 }}
+                        animate={{ width: `${skill.level}%` }}
+                        transition={{ duration: 1, delay: idx * 0.1 + 0.2 }}
+                        className="h-full bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 rounded-full"
+                      />
+                    </div>
+                  </motion.div>
+                ))}
               </motion.div>
-            ))}
+            </AnimatePresence>
           </motion.div>
         </motion.section>
 
@@ -1312,26 +1454,92 @@ export default function Home() {
         </motion.section>
 
         {/* Footer */}
-        <footer className="border-t border-gray-200 dark:border-gray-800">
+        <footer className="border-t border-gray-200 dark:border-gray-800 bg-gradient-to-b from-transparent to-gray-50 dark:to-gray-900">
           <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-            <div className="flex flex-col sm:flex-row justify-between items-start gap-8 mb-8">
+            <div className="grid md:grid-cols-3 gap-8 mb-8">
+              {/* About */}
               <div>
-                <p className="text-sm text-gray-600 dark:text-gray-400">
-                  © 2024. Built with Next.js & shadcn/ui
+                <h3 className="text-lg font-semibold mb-4 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">Nguyễn Thành Long</h3>
+                <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
+                  Passionate Back-End Developer building scalable, high-performance systems with clean architecture and solid testing.
                 </p>
+                <div className="flex gap-3">
+                  <a
+                    href="https://github.com/sSyRuSs"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="p-2 rounded-full bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
+                  >
+                    <Github size={18} />
+                  </a>
+                  <a
+                    href="https://www.linkedin.com/in/nguyexenlong0504"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="p-2 rounded-full bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
+                  >
+                    <Linkedin size={18} />
+                  </a>
+                  <a
+                    href="mailto:thanhlong1393@gmail.com"
+                    className="p-2 rounded-full bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
+                  >
+                    <Mail size={18} />
+                  </a>
+                </div>
               </div>
-              <div className="flex gap-4 text-sm text-gray-600 dark:text-gray-400">
-                <a
-                  href="#"
-                  className="hover:text-black dark:hover:text-white transition-colors"
-                >
-                  Privacy
+
+              {/* Quick Links */}
+              <div>
+                <h3 className="text-sm font-semibold mb-4">Quick Links</h3>
+                <ul className="space-y-2 text-sm text-gray-600 dark:text-gray-400">
+                  <li>
+                    <a href="#projects" className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors flex items-center gap-2">
+                      <ChevronRight size={14} /> Projects
+                    </a>
+                  </li>
+                  <li>
+                    <a href="#contact" className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors flex items-center gap-2">
+                      <ChevronRight size={14} /> Contact
+                    </a>
+                  </li>
+                  <li>
+                    <a href={`${basePath}/Long-Nguyen-Thanh-CV.pdf`} className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors flex items-center gap-2">
+                      <ChevronRight size={14} /> Download CV
+                    </a>
+                  </li>
+                </ul>
+              </div>
+
+              {/* Newsletter */}
+              <div>
+                <h3 className="text-sm font-semibold mb-4">Stay Updated</h3>
+                <p className="text-xs text-gray-600 dark:text-gray-400 mb-3">
+                  Subscribe to get notified about new projects and articles.
+                </p>
+                <div className="flex gap-2">
+                  <input
+                    type="email"
+                    placeholder="your@email.com"
+                    className="flex-1 px-3 py-2 text-sm border border-gray-300 dark:border-gray-700 rounded bg-white dark:bg-black focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  />
+                  <Button size="sm" className="bg-gradient-to-r from-blue-600 to-purple-600">
+                    <ArrowUp size={16} className="rotate-45" />
+                  </Button>
+                </div>
+              </div>
+            </div>
+
+            <div className="border-t border-gray-200 dark:border-gray-800 pt-8 flex flex-col sm:flex-row justify-between items-center gap-4">
+              <p className="text-sm text-gray-600 dark:text-gray-400">
+                © 2024. Built with Next.js & shadcn/ui
+              </p>
+              <div className="flex gap-6 text-sm text-gray-600 dark:text-gray-400">
+                <a href="#" className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
+                  Privacy Policy
                 </a>
-                <a
-                  href="#"
-                  className="hover:text-black dark:hover:text-white transition-colors"
-                >
-                  Terms
+                <a href="#" className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
+                  Terms of Service
                 </a>
               </div>
             </div>
